@@ -8,6 +8,13 @@ export class UserValidation {
         uniq_id: z.string().min(1).max(100),
         username: z.string().min(1).max(100),
         password: z.string().min(1).max(100),
+        user_detail: z.object({
+            address: z.string().min(1).max(100),
+            place_of_birth: z.string().min(1).max(100),
+            date_of_birth: z.string().min(1).max(100),
+            phone_number: z.string().min(1).max(100),
+            gender: z.string().min(1).max(100)
+        })
     });
 
     static readonly LOGIN: ZodType = z.object({

@@ -11,7 +11,7 @@ import { prismaClient } from "../application/database";
 import { ResponseError } from "../error/response-error";
 import bcrypt from "bcrypt";
 import { v4 as uuid } from "uuid";
-import { EnumRole, User } from "@prisma/client";
+import { EnumGender, EnumRole, User } from "@prisma/client";
 
 export class UserService {
 
@@ -24,16 +24,21 @@ export class UserService {
             }
         });
 
-        if (totalUserWithSameUsername != 0) {
-            throw new ResponseError(400, "Username already exists");
-        }
-
-        registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
+        const userDetail = {
+            create: {
+                address: registerRequest.user_detail.address,
+                place_of_birth: registerRequest.user_detail.place_of_birth,
+                date_of_birth: registerRequest.user_detail.date_of_birth,
+                gender: registerRequest.user_detail.gender as EnumGender,
+                phone_number: registerRequest.user_detail.phone_number
+            }
+        };
 
         const user = await prismaClient.user.create({
             data: {
                 ...registerRequest,
-                role: "MAHASISWA" as EnumRole
+                role: "MAHASISWA" as EnumRole,
+                user_detail: userDetail
             }
         });
 

@@ -46,8 +46,9 @@ model UserDetail {
   user_id           Int  @unique
   address           String? @db.LongText
   place_of_birth    String? @db.VarChar(100)
-  date_of_birth     DateTime?
+  date_of_birth     DateTime? @db.Date
   gender            EnumGender
+  phone_number      String? @db.VarChar(50)
   created_at        DateTime @default(now())
   updated_at        DateTime @updatedAt
   user              User     @relation(fields: [user_id], references: [id])

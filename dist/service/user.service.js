@@ -29,12 +29,17 @@ class UserService {
                     username: registerRequest.username
                 }
             });
-            if (totalUserWithSameUsername != 0) {
-                throw new response_error_1.ResponseError(400, "Username already exists");
-            }
-            registerRequest.password = yield bcrypt_1.default.hash(registerRequest.password, 10);
+            const userDetail = {
+                create: {
+                    address: registerRequest.user_detail.address,
+                    place_of_birth: registerRequest.user_detail.place_of_birth,
+                    date_of_birth: registerRequest.user_detail.date_of_birth,
+                    gender: registerRequest.user_detail.gender,
+                    phone_number: registerRequest.user_detail.phone_number
+                }
+            };
             const user = yield database_1.prismaClient.user.create({
-                data: Object.assign(Object.assign({}, registerRequest), { role: "MAHASISWA" })
+                data: Object.assign(Object.assign({}, registerRequest), { role: "MAHASISWA", user_detail: userDetail })
             });
             return (0, user_model_1.toUserResponse)(user);
         });

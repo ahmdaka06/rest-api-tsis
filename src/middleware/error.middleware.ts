@@ -2,21 +2,23 @@ import {Response, Request, NextFunction} from "express";
 import {ZodError, ZodIssue} from "zod";
 import {ResponseError} from "../error/response-error";
 
-const formatZodIssue = (issue: ZodIssue): string => {
+const formatZodIssue = (issue: ZodIssue): object => {
     const { path, message } = issue
     const pathString = path.join('.')
 
-    return `${pathString}: ${message}`
+    return {
+        path: pathString,
+        message
+    }
 }
 
+
 // Format the Zod error message with only the current error
-const formatZodError = (error: ZodError): string | undefined => {
+const formatZodError = (error: ZodError): object | undefined => {
     const { issues } = error
 
     if (issues.length) {
-        const currentIssue = issues[0]
-
-        return formatZodIssue(currentIssue)
+        return issues.map(formatZodIssue)
     }
 
     return undefined;
@@ -26,6 +28,7 @@ const formatZodError = (error: ZodError): string | undefined => {
 
 export const errorMiddleware = async (error: Error, req: Request, res: Response, next: NextFunction) => {
     if (error instanceof ZodError) {
+        console.log(error.issues);
         res.status(400).json({
             code: "VALIDATION",
             errors: formatZodError(error)

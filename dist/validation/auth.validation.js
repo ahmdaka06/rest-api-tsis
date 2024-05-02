@@ -11,6 +11,13 @@ UserValidation.REGISTER = zod_1.z.object({
     uniq_id: zod_1.z.string().min(1).max(100),
     username: zod_1.z.string().min(1).max(100),
     password: zod_1.z.string().min(1).max(100),
+    user_detail: zod_1.z.object({
+        address: zod_1.z.string().min(1).max(100),
+        place_of_birth: zod_1.z.string().min(1).max(100),
+        date_of_birth: zod_1.z.string().min(1).max(100),
+        phone_number: zod_1.z.string().min(1).max(100),
+        gender: zod_1.z.string().min(1).max(100)
+    })
 });
 UserValidation.LOGIN = zod_1.z.object({
     username: zod_1.z.string().min(1).max(100),

@@ -1,4 +1,4 @@
-import {User} from "@prisma/client";
+import {EnumRole, User} from "@prisma/client";
 
 export type UserResponse = {
     username: string;
@@ -13,6 +13,13 @@ export type CreateUserRequest = {
     username: string;
     password: string;
     role: string;
+    user_detail: {
+        address: string;
+        place_of_birth: string;
+        date_of_birth: string;
+        gender: EnumRole;
+        phone_number: string;
+    }
 }
 
 export type LoginUserRequest = {
