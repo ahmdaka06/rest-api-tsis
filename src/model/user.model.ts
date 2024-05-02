@@ -7,9 +7,12 @@ export type UserResponse = {
 }
 
 export type CreateUserRequest = {
-    username: string;
+    email: string;
     name: string;
+    uniq_id: string;
+    username: string;
     password: string;
+    role: string;
 }
 
 export type LoginUserRequest = {

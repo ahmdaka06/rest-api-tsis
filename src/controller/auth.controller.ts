@@ -1,10 +1,11 @@
-import {Request, Response, NextFunction} from "express";
-import {CreateUserRequest, LoginUserRequest, UpdateUserRequest} from "../model/user-model";
-import {UserService} from "../service/user-service";
-import {UserRequest} from "../type/user-request";
+import { Request, Response, NextFunction } from "express";
+import { CreateUserRequest, LoginUserRequest, UpdateUserRequest } from "../model/user.model";
+import { UserService } from "../service/user.service";
+import { UserRequest } from "../type/user.request";
 
-export class UserController {
+export class AuthController {
 
+    
     static async register(req: Request, res: Response, next: NextFunction) {
         try {
             const request: CreateUserRequest = req.body as CreateUserRequest;

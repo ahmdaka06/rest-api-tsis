@@ -13,41 +13,74 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  username String  @id @db.VarChar(100)
-  password String  @db.VarChar(100)
-  name     String  @db.VarChar(100)
-  token    String? @db.VarChar(100)
+enum EnumRole {
+  ADMIN
+  DOSEN
+  MAHASISWA
+}
 
-  contacts Contact[]
+enum EnumGender {
+  MALE
+  FEMALE
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  uniq_id  String  @unique @db.VarChar(100)
+  name     String  @db.VarChar(100)
+  email    String  @db.VarChar(100)
+  username String  @db.VarChar(100) @unique
+  password String  @db.VarChar(100)
+  role     EnumRole
+  token    String? @db.LongText
+
+  user_detail UserDetail?
+  articles Articles[]
+  journals Journal[]
 
   @@map("users")
 }
 
-model Contact {
-  id         Int     @id @default(autoincrement())
-  first_name String  @db.VarChar(100)
-  last_name  String? @db.VarChar(100)
-  email      String? @db.VarChar(100)
-  phone      String? @db.VarChar(20)
-  username   String  @db.VarChar(100)
-
-  user      User      @relation(fields: [username], references: [username])
-  addresses Address[]
-
-  @@map("contacts")
+model UserDetail {
+  id                Int     @id @default(autoincrement())
+  user_id           Int  @unique
+  address           String? @db.LongText
+  place_of_birth    String? @db.VarChar(100)
+  date_of_birth     DateTime?
+  gender            EnumGender
+  created_at        DateTime @default(now())
+  updated_at        DateTime @updatedAt
+  user              User     @relation(fields: [user_id], references: [id])
+  @@map("user_details")
 }
 
-model Address {
+model Articles {
   id          Int     @id @default(autoincrement())
-  street      String? @db.VarChar(255)
-  city        String? @db.VarChar(100)
-  province    String? @db.VarChar(100)
-  country     String  @db.VarChar(100)
-  postal_code String  @db.VarChar(10)
-  contact_id  Int
+  user_id     Int
+  title       String  @unique@db.VarChar(255)
+  url         String  @db.VarChar(255)
+  thumbnail   String  @db.VarChar(255)
+  content     String  @db.LongText
+  is_published Boolean @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
-  contact Contact @relation(fields: [contact_id], references: [id])
+  user        User     @relation(fields: [user_id], references: [id])
 
-  @@map("addresses")
+  @@map("articles")
 }
+
+model Journal {
+  id          Int     @id @default(autoincrement())
+  user_id     Int
+  title       String  @db.VarChar(255) @unique
+  url         String  @db.VarChar(255)
+  thumbnail   String  @db.VarChar(255)
+  content     String  @db.LongText
+  is_published Boolean @default(false)
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user        User     @relation(fields: [user_id], references: [id])
+}
+

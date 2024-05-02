@@ -4,14 +4,14 @@ import {
     toUserResponse,
     UpdateUserRequest,
     UserResponse
-} from "../model/user-model";
-import {Validation} from "../validation/validation";
-import {UserValidation} from "../validation/user-validation";
-import {prismaClient} from "../application/database";
-import {ResponseError} from "../error/response-error";
+} from "../model/user.model";
+import { Validation } from "../validation/validation";
+import { UserValidation } from "../validation/auth.validation";
+import { prismaClient } from "../application/database";
+import { ResponseError } from "../error/response-error";
 import bcrypt from "bcrypt";
-import {v4 as uuid} from "uuid";
-import {User} from "@prisma/client";
+import { v4 as uuid } from "uuid";
+import { EnumRole, User } from "@prisma/client";
 
 export class UserService {
 
@@ -31,7 +31,10 @@ export class UserService {
         registerRequest.password = await bcrypt.hash(registerRequest.password, 10);
 
         const user = await prismaClient.user.create({
-            data: registerRequest
+            data: {
+                ...registerRequest,
+                role: "MAHASISWA" as EnumRole
+            }
         });
 
         return toUserResponse(user);
